@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:14
+    container_name: postgres_db
+    restart: always
+    shm_size: 256mb
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: mX9NqL3rZ
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    mem_limit: 350m
+    cpus: 0.5
+
+  web:
+    build: .
+    container_name: django_app
+    restart: always
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers=2 --threads=2 --max-requests=1000 --timeout=30
+    volumes:
+      - .:/app
+    env_file: # if you commented you must run docker-compose with --env-file
+      ./environments/.env.prod
+    depends_on:
+      - db
+    mem_limit: 400m
+    cpus: 0.5
+    # Port 8000 not exposed externally, only nginx proxies to it.
+    # Uncomment below if you want direct access (not recommended for prod).
+    # ports:
+    #   - "8000:8000"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /empty-dir:/etc/nginx/conf.d
+      - ./static:/static
+      - ./media:/media
+      - /etc/letsencrypt:/etc/letsencrypt:ro # Mount Certificate
+    env_file: # if you commented you must run docker-compose with --env-file
+      ./environments/.env.prod
+    depends_on:
+      - web
+    mem_limit: 150m
+    cpus: 0.25
+
+volumes:
+  postgres_data:

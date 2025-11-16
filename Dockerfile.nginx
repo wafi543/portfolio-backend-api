@@ -1,0 +1,11 @@
+FROM nginx:alpine
+
+# Install envsubst if needed (already included in nginx:alpine)
+RUN apk add --no-cache gettext
+
+# Copy and make executable
+COPY docker-entrypoint-nginx.sh /docker-entrypoint.d/00-envsubst.sh
+RUN chmod +x /docker-entrypoint.d/00-envsubst.sh
+
+# Copy other necessary files (like your nginx config template)
+COPY server_config/nginx.template.conf /etc/nginx/nginx.template.conf

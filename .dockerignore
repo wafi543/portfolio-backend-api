@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Env
+.env
+*.env
+
+# Django static/media (will be collected at build)
+staticfiles/
+media/
+
+# Git
+.git
+.gitignore
+
+# Node / Frontend
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS files
+.DS_Store
+Thumbs.db

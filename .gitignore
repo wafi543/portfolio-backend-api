@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 
 *.sqlite3
+server_config/ssh_keys/
+
+.env
+.env.prod
