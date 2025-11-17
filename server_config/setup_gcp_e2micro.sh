@@ -44,7 +44,7 @@ if [ $? -eq 0 ]; then
   timeout 30 bash -c "until gcloud compute ssh $GCP_INSTANCE_NAME --zone=$GCP_ZONE --command='echo SSH ready' &>/dev/null; do sleep 5; done"
 
   # Show live logs inside VM instance
-  gcloud compute ssh $GCP_INSTANCE_NAME --zone=$GCP_ZONE --command "$INITIAL_SESSION_COMMANDS"
+  gcloud compute ssh $UBUNTU_USER@$GCP_INSTANCE_NAME --zone=$GCP_ZONE --command "$INITIAL_SESSION_COMMANDS"
 else
   echo "❌ Instance creation failed!"
   echo "Error details:"
