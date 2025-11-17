@@ -55,4 +55,4 @@ RUN chmod +x /app/docker-entrypoint-app.sh && \
 EXPOSE 8000
 
 # Start the app
-ENTRYPOINT ["/app/docker-entrypoint-app.sh"]
+ENTRYPOINT ["/bin/bash", "-c", "bash /app/docker-entrypoint-app.sh"]
