@@ -65,8 +65,8 @@ if [ -f /home/$USER/.ssh/id_ed25519.pub ]; then
     ENV_DIR="/home/$USER/$INSTANCE_NAME/environments"
     mkdir -p "$ENV_DIR" || { echo "❌ Failed to create $ENV_DIR"; exit 1; }
     ENV_FILE="$ENV_DIR/.env.prod"
-    touch "$ENV_FILE" || { echo "❌ Failed to create $ENV_FILE"; exit 1; }
-    cat > "$ENV_FILE" <<EOF
+    sudo -u $USER touch "$ENV_FILE" || { echo "❌ Failed to create $ENV_FILE"; exit 1; }
+    sudo -u $USER cat > "$ENV_FILE" <<EOF
 # Postgres Env Vars
 export POSTGRES_HOST="db" # docker-compose service name
 export POSTGRES_PORT="5432"
@@ -87,7 +87,7 @@ export GITHUB_REPO="$GITHUB_REPO"
 export GCP_INSTANCE_NAME="$INSTANCE_NAME"
 export SSL_CERT_PATH="$SSL_CERT_PATH"
 EOF
-    chmod 600 "$ENV_FILE"
+    sudo -u $USER chmod 600 "$ENV_FILE"
     echo "✅ .env.prod generated successfully in $ENV_FILE"
   else
     echo "❌ The repo not found in ~/$USER/ directory"
