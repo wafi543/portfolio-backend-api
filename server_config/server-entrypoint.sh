@@ -108,34 +108,21 @@ systemctl enable docker
 systemctl start docker
 
 echo "4. 🔐 Installing HTTPS Certificate for you domain ${NGINX_HOST}"
-# Check if NGINX_HOST is empty
-if [ -z "$NGINX_HOST" ]; then
-  echo "⚠️ NGINX_HOST is not set. Skipping SSL certificate setup."
-  SETUP_SSL="n"
-else
-  # Prompt user for SSL setup
-  read -p "Do you want to setup SSL certificate for $NGINX_HOST? (y/n): " -n 1 -r SETUP_SSL
-  echo
-fi
+sudo apt install certbot python3-certbot-nginx -y
+certbot certonly --nginx -d $NGINX_HOST -d www.$NGINX_HOST \
+--email "$EMAIL" --agree-tos
 
-if [[ "$SETUP_SSL" =~ ^[Yy]$ ]]; then
-  sudo apt install certbot python3-certbot-nginx -y
-  certbot certonly --nginx -d $NGINX_HOST -d www.$NGINX_HOST \
-  --email "$EMAIL" --agree-tos
 
-  # Add these lines to stop host Nginx
-  echo "- Stopping host Nginx service to free port 80 for Docker"
-  systemctl stop nginx
-  systemctl disable nginx
+# Add these lines to stop host Nginx
+echo "- Stopping host Nginx service to free port 80 for Docker"
+systemctl stop nginx
+systemctl disable nginx
 
-  # Set permissions
-  chmod -R 644 $SSL_CERT_PATH/live/${NGINX_HOST}/*.pem
-  chmod 600 $SSL_CERT_PATH/live/${NGINX_HOST}/privkey.pem
+# Set permissions
+chmod -R 644 $SSL_CERT_PATH/live/${NGINX_HOST}/*.pem
+chmod 600 $SSL_CERT_PATH/live/${NGINX_HOST}/privkey.pem
 
-  echo "✅ SSL Certificate generated at $SSL_CERT_PATH/live/${NGINX_HOST}"
-else
-  echo "⏭️  Skipped SSL certificate setup"
-fi
+echo "✅ SSL Certificate generated at $SSL_CERT_PATH/live/${NGINX_HOST}"
 
 if [ -d /home/$USER/$INSTANCE_NAME/ ]; then
     echo "5. Run Django + PostgreSQL with nginx containers"
