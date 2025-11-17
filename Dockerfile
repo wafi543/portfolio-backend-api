@@ -48,7 +48,8 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /app /app
 
 # Ensure entrypoint has execute permissions
-RUN chmod +x /app/docker-entrypoint-app.sh
+RUN chmod +x /app/docker-entrypoint-app.sh && \
+    ls -la /app/docker-entrypoint-app.sh
 
 # Expose the port Fly.io will use
 EXPOSE 8000
