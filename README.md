@@ -144,7 +144,7 @@ django_posts_api/
 Build and run the application in Docker:
 
 ```bash
-docker-compose up --build
+source environments/.env.prod && docker-compose up -d --build
 ```
 
 Or build manually:
