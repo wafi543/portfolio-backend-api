@@ -1,6 +1,14 @@
 # Stage 1: Build
 FROM python:3.8-slim AS builder
 
+# Accept build arguments from docker-compose
+ARG DJANGO_SECRET_KEY
+ARG DATABASE_URL
+
+# Set environment variables from build args
+ENV DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+ENV DATABASE_URL=${DATABASE_URL}
+
 # Prevents Python from writing pyc files & output buffering
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
