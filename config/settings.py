@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework',
     'corsheaders',
+    'storages',
     'posts',
 ]
 
@@ -135,6 +136,24 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Google Cloud Storage Configuration (for media files)
+if CURRENT_ENV == 'prod' or os.environ.get('USE_GCS', os.getenv('USE_GCS', 'False')) == 'True':
+    GS_BUCKET_NAME = os.environ.get('GCS_BUCKET_NAME', os.getenv('GCS_BUCKET_NAME', 'your-bucket-name'))
+    GS_PROJECT_ID = os.environ.get('GCS_PROJECT_ID', os.getenv('GCS_PROJECT_ID', 'your-project-id'))
+    GS_CUSTOM_ENDPOINT = os.environ.get('GCS_CUSTOM_ENDPOINT', os.getenv('GCS_CUSTOM_ENDPOINT', None))
+    GS_LOCATION = 'media'
+    GS_DEFAULT_ACL = 'public-read'
+    
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
+    
+    # Prevent django-storages from compressing media files
+    GS_KEEP_DEFAULT_ACL = True
+else:
+    # Local storage for development
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # REST Framework Configuration
 REST_FRAMEWORK = {
