@@ -6,6 +6,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Post
 from .serializers import (
@@ -16,9 +17,16 @@ from .permissions import IsOwner
 class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
 
     def get_queryset(self) -> QuerySet[Post]:
-        return Post.objects.filter(author=self.request.user)
+        queryset = Post.objects.filter(author=self.request.user)
+        
+        # Filter latest 6 posts if ?recent query parameter is present
+        if self.request.query_params.get('recent'):
+            queryset = queryset.order_by('-created_at')[:6]
+        
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
