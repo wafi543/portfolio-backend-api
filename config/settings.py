@@ -17,7 +17,8 @@ CURRENT_ENV = 'local' # local - test - prod
 ALLOWED_HOSTS: list = [
     'localhost',
     '127.0.0.1',
-    'https://pixel-portfolios.vercel.app'
+    'pixel-portfolios.vercel.app',
+    'portfolio.alnmasi.men'
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
