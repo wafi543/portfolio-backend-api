@@ -8,3 +8,5 @@ server_config/ssh_keys/
 
 .env
 .env.prod
+
+freelancer-*-*.json
