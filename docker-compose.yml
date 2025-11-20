@@ -36,8 +36,6 @@ services:
     volumes:
       - .:/app
     depends_on:
-    env_file: # if you commented you must run docker-compose with --env-file
-      ./environments/.env.prod
       - db
     mem_limit: 400m
     cpus: 0.5
