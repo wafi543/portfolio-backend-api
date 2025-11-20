@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import timedelta
 import dj_database_url
 from corsheaders.defaults import default_headers, default_methods
+from google.oauth2 import service_account
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(BASE_DIR, 'environments', '.env'))
@@ -141,15 +142,30 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 if CURRENT_ENV == 'prod' or os.environ.get('USE_GCS', os.getenv('USE_GCS', 'False')) == 'True':
     GS_BUCKET_NAME = os.environ.get('GCS_BUCKET_NAME', os.getenv('GCS_BUCKET_NAME', 'your-bucket-name'))
     GS_PROJECT_ID = os.environ.get('GCS_PROJECT_ID', os.getenv('GCS_PROJECT_ID', 'your-project-id'))
-    GS_CUSTOM_ENDPOINT = os.environ.get('GCS_CUSTOM_ENDPOINT', os.getenv('GCS_CUSTOM_ENDPOINT', None))
+    GCS_REGION = os.environ.get('GCS_REGION', os.getenv('GCS_REGION', 'europe-west1'))
     GS_LOCATION = 'media'
     GS_DEFAULT_ACL = 'public-read'
+    
+    # Load GCS credentials from environment
+    gcs_credentials_json = os.environ.get('GCS_SERVICE_ACCOUNT_JSON', os.getenv('GCS_SERVICE_ACCOUNT_JSON', None))
+    
+    if gcs_credentials_json:
+        import json
+        try:
+            GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
+                json.loads(gcs_credentials_json)
+            )
+        except Exception as e:
+            print(f"Warning: Failed to load GCS credentials from JSON env var: {e}")
+    else:
+            print(f"Warning: Failed to load GCS credentials from JSON env var: {e}")
     
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
     
     # Prevent django-storages from compressing media files
     GS_KEEP_DEFAULT_ACL = True
+    GS_QUERYSET_AUTH = False  # Allow public read access to media files
 else:
     # Local storage for development
     MEDIA_URL = '/media/'
