@@ -17,7 +17,7 @@ export DJANGO_SECRET_KEY=$(curl -s "http://metadata.google.internal/computeMetad
 export DJANGO_DEBUG=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/DJANGO_DEBUG" -H "Metadata-Flavor: Google" || echo "False")
 
 # Creating aliases
-echo "alias redeploy=\"sudo pkill -f nginx && cd ~/$INSTANCE_NAME && docker-compose down && git pull && docker-compose --env-file environments/.env.prod up -d --build\"" >> /etc/profile.d/custom_alias.sh
+echo "alias redeploy=\"sudo pkill -f nginx && cd ~/$INSTANCE_NAME && source ./environments/.env.prod && docker-compose down && git pull && docker-compose --env-file environments/.env.prod up -d --build\"" >> /etc/profile.d/custom_alias.sh
 echo "alias instance-logs=\"sudo cat /var/log/syslog | grep startup-script\"" >> /etc/profile.d/custom_alias.sh
 echo "alias instance-logs-live=\"sudo journalctl -u google-startup-scripts.service -f\"" >> /etc/profile.d/custom_alias.sh
 
