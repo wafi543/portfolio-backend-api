@@ -16,11 +16,20 @@ from .permissions import IsOwner
 
 class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
 
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self) -> QuerySet[Post]:
-        queryset = Post.objects.filter(author=self.request.user)
+        if self.request.user.is_authenticated:
+            queryset = Post.objects.filter(author=self.request.user)
+        else:
+            queryset = Post.objects.all()
         
         # Filter latest 6 posts if ?recent query parameter is present
         if self.request.query_params.get('recent'):
