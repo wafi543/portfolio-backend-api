@@ -1,13 +1,13 @@
-from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from django.apps import apps
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email']
+        model = apps.get_model('users', 'User')
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
 
 
 class LoginSerializer(serializers.Serializer):

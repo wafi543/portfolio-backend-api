@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from storages.backends.gcloud import GoogleCloudStorage
 
 
@@ -11,7 +11,7 @@ class Post(models.Model):
         ('design', 'Design'),
     )
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=300, blank=True, null=True)
     image = models.ImageField(

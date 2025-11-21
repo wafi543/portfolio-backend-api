@@ -38,6 +38,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://pixel-portfolios.vercel.app"
 ]
 
+AUTH_USER_MODEL = 'users.User'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'storages',
+    'users',
     'posts',
 ]
 
