@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 from .serializers import (
-    LoginSerializer, UserSerializer
+    LoginSerializer, UserSerializer, TokenRefreshSerializer
 )
 from .permissions import IsAccessTokenValid
 from rest_framework.views import APIView
@@ -87,3 +88,22 @@ class TokenVerifyView(APIView):
             {'detail': 'Token is valid'},
             status=status.HTTP_200_OK,
         )
+
+
+class TokenRefreshView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = TokenRefreshSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        try:
+            refresh = RefreshToken(serializer.validated_data['refresh'])
+            return Response({
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
+        except (InvalidToken, TokenError) as e:
+            return Response(
+                {'detail': 'Invalid refresh token'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )

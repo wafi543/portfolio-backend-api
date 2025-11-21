@@ -7,6 +7,7 @@ from .views import (
     MeView,
     PasswordChangeView,
     TokenVerifyView,
+    TokenRefreshView,
 )
 from .serializers import (
     UserSerializer,
@@ -20,4 +21,5 @@ urlpatterns = [    # Auth
     path('auth/me/', MeView.as_view(), name='api_me'),
     path('auth/password-change/', PasswordChangeView.as_view(), name='api_password_change'),
     path('auth/token/verify/', TokenVerifyView.as_view(), name='api_token_verify'),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='api_token_refresh'),
 ]

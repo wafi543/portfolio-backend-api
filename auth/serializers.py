@@ -26,3 +26,17 @@ class PasswordChangeSerializer(serializers.Serializer):
         except ValidationError as exc:
             raise serializers.ValidationError(exc.messages)
         return value
+
+
+class TokenRefreshSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+    
+    def validate_refresh(self, value):
+        from rest_framework_simplejwt.tokens import RefreshToken
+        from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+        
+        try:
+            RefreshToken(value)
+        except (InvalidToken, TokenError):
+            raise serializers.ValidationError('Invalid refresh token')
+        return value
