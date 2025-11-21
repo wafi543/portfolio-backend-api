@@ -16,10 +16,10 @@ from .serializers import (
 )
 
 urlpatterns = [    # Auth
-    path('auth/login/', LoginView.as_view(), name='api_login'),
-    path('auth/logout/', LogoutView.as_view(), name='api_logout'),
-    path('auth/me/', MeView.as_view(), name='api_me'),
-    path('auth/password-change/', PasswordChangeView.as_view(), name='api_password_change'),
-    path('auth/token/verify/', TokenVerifyView.as_view(), name='api_token_verify'),
-    path('auth/token/refresh/', TokenRefreshView.as_view(), name='api_token_refresh'),
+    path('login/', LoginView.as_view(), name='api_login'),
+    path('logout/', LogoutView.as_view(), name='api_logout'),
+    path('me/', MeView.as_view(), name='api_me'),
+    path('password-change/', PasswordChangeView.as_view(), name='api_password_change'),
+    path('token/verify/', TokenVerifyView.as_view(), name='api_token_verify'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='api_token_refresh'),
 ]
