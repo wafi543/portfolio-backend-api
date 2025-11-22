@@ -35,7 +35,8 @@ class Portfolio(models.Model):
 class PortfolioInfo(models.Model):
     """Store portfolio owner's information linked to a User"""
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='portfolio_info', null=True, blank=True)
-    portfolio_title = models.CharField(max_length=200)
+    portfolio_title = models.CharField(max_length=200, default='My Portfolio')
+    portfolio_title_ar = models.CharField(max_length=200, default='منصة أعمالي')
     background_image = models.ImageField(
         upload_to='portfolio_background/',
         blank=True,
