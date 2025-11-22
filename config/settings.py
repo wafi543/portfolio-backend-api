@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'storages',
     'users',
-    'posts',
+    'portfolios',
 ]
 
 MIDDLEWARE = [
