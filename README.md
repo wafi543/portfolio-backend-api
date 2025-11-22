@@ -152,6 +152,22 @@ Or build manually:
 ./build.sh
 ```
 
+### Create Superuser in Docker
+
+To create a superuser in your running Django container:
+
+```bash
+docker exec -it django_app python manage.py createsuperuser
+```
+
+Or use a Python script for non-interactive setup:
+
+```bash
+docker exec -it django_app python manage.py shell << EOF
+from users.models import User
+User.objects.create_superuser('admin', 'admin@example.com', '@admin123123')
+EOF
+
 ## Environment Variables
 
 Create a `.env` file in the project root (optional for development):
