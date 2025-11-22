@@ -10,3 +10,5 @@ server_config/ssh_keys/
 .env.prod
 
 freelancer-*-*.json
+
+.github/
