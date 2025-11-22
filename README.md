@@ -35,7 +35,7 @@ A lightweight Django REST Framework backend providing session-based authenticati
 ## Quick Start
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.11+
 - pip and venv
 
 ### Installation

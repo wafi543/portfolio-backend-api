@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM python:3.8-slim AS builder
+FROM python:3.11-slim AS builder
 
 # Accept build arguments from docker-compose
 ARG DJANGO_SECRET_KEY
@@ -34,7 +34,7 @@ COPY . .
 RUN python manage.py collectstatic --noinput
 
 # Stage 2: Runtime
-FROM python:3.8-slim
+FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -49,7 +49,7 @@ RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/ap
 WORKDIR /app
 
 # Copy installed packages from builder
-COPY --from=builder /usr/local/lib/python3.8 /usr/local/lib/python3.8
+COPY --from=builder /usr/local/lib/python3.11 /usr/local/lib/python3.11
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy app source
