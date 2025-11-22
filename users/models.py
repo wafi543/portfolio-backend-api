@@ -37,6 +37,18 @@ class CustomUser(AbstractUser):
         null=True,
         help_text="About me section in Arabic"
     )
+    bio = models.CharField(
+        max_length=250,
+        blank=True,
+        null=True,
+        help_text="Brief bio in English"
+    )
+    bio_ar = models.CharField(
+        max_length=250,
+        blank=True,
+        null=True,
+        help_text="Brief bio in Arabic"
+    )
 
     class Meta:
         abstract = True
