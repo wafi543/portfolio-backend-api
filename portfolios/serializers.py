@@ -1,4 +1,5 @@
 from rest_framework import serializers
+import re
 
 from .models import Portfolio, PortfolioInfo, Category
 from auth.serializers import UserSerializer
@@ -10,6 +11,18 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name', 'name_ar', 'slug', 'created_at', 'updated_at']
         read_only_fields = ['id', 'slug', 'created_at', 'updated_at']
+
+    def validate_name(self, value):
+        """Ensure category name contains only English alphabetical characters and spaces."""
+        if not re.match(r'^[a-zA-Z\s]+$', value):
+            raise serializers.ValidationError('Category name must contain only English alphabetical characters and spaces.')
+        return value
+
+    def validate_name_ar(self, value):
+        """Ensure category Arabic name contains only Arabic characters and spaces."""
+        if not re.match(r'^[\u0600-\u06FF\s]+$', value):
+            raise serializers.ValidationError('Category Arabic name must contain only Arabic characters and spaces.')
+        return value
 
     def create(self, validated_data):
         """Auto-generate slug from name on creation."""
