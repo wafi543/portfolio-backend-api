@@ -36,7 +36,7 @@ class PortfolioInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PortfolioInfo
-        fields = ['id', 'portfolio_title', 'full_name', 'email', 'job_title', 'phone_number', 'location', 'background_image', 'created_at', 'updated_at']
+        fields = ['id', 'portfolio_title', 'portfolio_title_ar', 'full_name', 'email', 'job_title', 'phone_number', 'location', 'background_image', 'created_at', 'updated_at']
         read_only_fields = ['id', 'full_name', 'email', 'job_title', 'phone_number', 'location', 'created_at', 'updated_at']
 
     def get_full_name(self, obj):
