@@ -39,7 +39,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PortfolioSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
+    author = UserSerializer(read_only=True, default=serializers.CurrentUserDefault())
     image = serializers.ImageField(required=False, allow_null=True)
     category = CategorySerializer(read_only=True)
     category_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
@@ -84,8 +84,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Set author to current user and handle category FK."""
         category_id = validated_data.pop('category_id', None)
-        validated_data.pop('author', None)  # Remove author if present to avoid duplicate keyword argument
-        portfolio = Portfolio.objects.create(author=self.context['request'].user, **validated_data)
+        portfolio = Portfolio.objects.create(**validated_data)
         
         if category_id:
             portfolio.category_id = category_id

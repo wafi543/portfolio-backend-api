@@ -68,6 +68,11 @@ class PortfolioListCreateView(generics.ListCreateAPIView):
         else:
             queryset = Portfolio.objects.all()
         
+        # Filter by category if ?category query parameter is present
+        category_id = self.request.query_params.get('category_id')
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+        
         # Filter latest 6 portfolios if ?recent query parameter is present
         if self.request.query_params.get('recent'):
             queryset = queryset.order_by('-created_at')[:6]
