@@ -1,11 +1,21 @@
 from django.contrib import admin
-from .models import Portfolio, PortfolioInfo
+from .models import Portfolio, PortfolioInfo, Category
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'name_ar', 'slug', 'user', 'created_at')
+    search_fields = ('name', 'name_ar', 'user__username')
+    readonly_fields = ('slug', 'created_at', 'updated_at')
+    list_filter = ('user',)
+    fields = ('user', 'name', 'name_ar', 'slug', 'created_at', 'updated_at')
 
 
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'created_at')
+    list_display = ('title', 'author', 'category', 'created_at')
     search_fields = ('title', 'body', 'author__username')
+    list_filter = ('author', 'category')
 
 
 @admin.register(PortfolioInfo)

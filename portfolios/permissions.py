@@ -6,3 +6,10 @@ class IsOwner(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return getattr(obj, 'author_id', None) == request.user.id
+
+
+class IsCategoryOwner(BasePermission):
+    """Allow access only to the user who owns the category."""
+
+    def has_object_permission(self, request, view, obj):
+        return obj.user_id == request.user.id

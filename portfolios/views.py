@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
+from django.db import models
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -8,12 +9,47 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Portfolio, PortfolioInfo
+from .models import Portfolio, PortfolioInfo, Category
 from .serializers import (
     PortfolioSerializer,
     PortfolioInfoSerializer,
+    CategorySerializer,
 )
-from .permissions import IsOwner
+from .permissions import IsOwner, IsCategoryOwner
+
+class CategoryListCreateView(generics.ListCreateAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self) -> QuerySet[Category]:
+        return Category.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class CategoryRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated, IsCategoryOwner]
+    queryset = Category.objects.all()
+
+    def get_queryset(self) -> QuerySet[Category]:
+        return Category.objects.filter(user=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Prevent deletion of categories with linked portfolios.
+        Catch ProtectedError from on_delete=models.PROTECT.
+        """
+        instance = self.get_object()
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except models.ProtectedError:
+            return Response(
+                {'detail': f'Cannot delete category with {instance.portfolios.count()} existing portfolio(s).'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
 
 class PortfolioListCreateView(generics.ListCreateAPIView):
     serializer_class = PortfolioSerializer
