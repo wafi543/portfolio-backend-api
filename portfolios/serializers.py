@@ -33,11 +33,13 @@ class PortfolioInfoSerializer(serializers.ModelSerializer):
     job_title = serializers.SerializerMethodField()
     phone_number = serializers.SerializerMethodField()
     location = serializers.SerializerMethodField()
+    about_me = serializers.SerializerMethodField()
+    about_me_ar = serializers.SerializerMethodField()
 
     class Meta:
         model = PortfolioInfo
-        fields = ['id', 'portfolio_title', 'portfolio_title_ar', 'full_name', 'email', 'job_title', 'phone_number', 'location', 'background_image', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'full_name', 'email', 'job_title', 'phone_number', 'location', 'created_at', 'updated_at']
+        fields = ['id', 'portfolio_title', 'portfolio_title_ar', 'full_name', 'email', 'job_title', 'phone_number', 'location', 'about_me', 'about_me_ar', 'background_image', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'full_name', 'email', 'job_title', 'phone_number', 'location', 'about_me', 'about_me_ar', 'created_at', 'updated_at']
 
     def get_full_name(self, obj):
         """Get full name from related User"""
@@ -58,3 +60,11 @@ class PortfolioInfoSerializer(serializers.ModelSerializer):
     def get_location(self, obj):
         """Get location from related User"""
         return obj.user.location if obj.user else None
+    
+    def get_about_me(self, obj):
+        """Get about_me from related User"""
+        return obj.user.about_me if obj.user else None
+    
+    def get_about_me_ar(self, obj):
+        """Get about_me_ar from related User"""
+        return obj.user.about_me_ar if obj.user else None

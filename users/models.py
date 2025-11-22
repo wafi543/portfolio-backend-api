@@ -25,6 +25,18 @@ class CustomUser(AbstractUser):
         null=True,
         help_text="Location of the user"
     )
+    about_me = models.TextField(
+        max_length=2000,
+        blank=True,
+        null=True,
+        help_text="About me section in English"
+    )
+    about_me_ar = models.TextField(
+        max_length=2000,
+        blank=True,
+        null=True,
+        help_text="About me section in Arabic"
+    )
 
     class Meta:
         abstract = True
