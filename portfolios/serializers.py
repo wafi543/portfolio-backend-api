@@ -84,6 +84,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Set author to current user and handle category FK."""
         category_id = validated_data.pop('category_id', None)
+        validated_data.pop('author', None)  # Remove author if present to avoid duplicate keyword argument
         portfolio = Portfolio.objects.create(author=self.context['request'].user, **validated_data)
         
         if category_id:
