@@ -12,3 +12,6 @@ server_config/ssh_keys/
 freelancer-*-*.json
 
 .github/
+
+# Compiled translation files (generated from .po)
+*.mo

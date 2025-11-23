@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from django.utils.translation import gettext_lazy as _
 
 from .serializers import (
-    LoginSerializer, UserSerializer, TokenRefreshSerializer
+    LoginSerializer, UserSerializer, TokenRefreshSerializer, PasswordChangeSerializer
 )
 from .permissions import IsAccessTokenValid
 from rest_framework.views import APIView
@@ -27,7 +28,7 @@ class LoginView(APIView):
         )
         if not user:
             return Response(
-                {'message': 'Invalid credentials'},
+                {'message': _('Invalid credentials')},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -64,13 +65,13 @@ class PasswordChangeView(APIView):
         old_password = serializer.validated_data['old_password']
         if not user.check_password(old_password):
             return Response(
-                {'old_password': ['Old password is not correct']},
+                {'old_password': [_('Old password is not correct')]},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         user.set_password(serializer.validated_data['new_password'])
         user.save()
-        return Response({'detail': 'Password changed successfully'})
+        return Response({'detail': _('Password changed successfully')})
 
 
 class MeView(APIView):
@@ -104,6 +105,6 @@ class TokenRefreshView(APIView):
             }, status=status.HTTP_200_OK)
         except (InvalidToken, TokenError) as e:
             return Response(
-                {'detail': 'Invalid refresh token'},
+                {'detail': _('Invalid refresh token')},
                 status=status.HTTP_401_UNAUTHORIZED,
             )

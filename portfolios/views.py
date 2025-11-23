@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -46,7 +47,7 @@ class CategoryRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             return super().destroy(request, *args, **kwargs)
         except models.ProtectedError:
             return Response(
-                {'detail': f'Cannot delete category with {instance.portfolios.count()} existing portfolio(s).'},
+                {'detail': _('Cannot delete category with %(count)s existing portfolio(s).') % {'count': instance.portfolios.count()}},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -102,7 +103,7 @@ class PortfolioInfoView(APIView):
             portfolio_info = PortfolioInfo.objects.first()
             if not portfolio_info:
                 return Response(
-                    {'detail': 'Portfolio info not found'},
+                    {'detail': _('Portfolio info not found')},
                     status=status.HTTP_404_NOT_FOUND
                 )
             serializer = PortfolioInfoSerializer(portfolio_info)

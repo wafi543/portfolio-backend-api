@@ -1,8 +1,9 @@
 from rest_framework import serializers
 import re
+from django.utils.translation import gettext_lazy as _
 
 from .models import Portfolio, PortfolioInfo, Category
-from auth.serializers import UserSerializer
+from authentication.serializers import UserSerializer
 
 class CategorySerializer(serializers.ModelSerializer):
     """Serializer for user-scoped portfolio categories with immutable slug."""
@@ -15,13 +16,13 @@ class CategorySerializer(serializers.ModelSerializer):
     def validate_name(self, value):
         """Ensure category name contains only English alphabetical characters and spaces."""
         if not re.match(r'^[a-zA-Z\s]+$', value):
-            raise serializers.ValidationError('Category name must contain only English alphabetical characters and spaces.')
+            raise serializers.ValidationError(_('Category name must contain only English alphabetical characters and spaces.'))
         return value
 
     def validate_name_ar(self, value):
         """Ensure category Arabic name contains only Arabic characters and spaces."""
         if not re.match(r'^[\u0600-\u06FF\s]+$', value):
-            raise serializers.ValidationError('Category Arabic name must contain only Arabic characters and spaces.')
+            raise serializers.ValidationError(_('Category Arabic name must contain only Arabic characters and spaces.'))
         return value
 
     def create(self, validated_data):
@@ -59,7 +60,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
         # Check file size (5MB limit)
         size_mb = value.size / (1024 * 1024)
         if size_mb > 5:
-            raise serializers.ValidationError(f'Image size ({size_mb:.2f}MB) exceeds 5MB limit')
+            raise serializers.ValidationError(_('Image size (%(size)s MB) exceeds 5MB limit') % {'size': f'{size_mb:.2f}'})
         
         return value
 
@@ -72,12 +73,12 @@ class PortfolioSerializer(serializers.ModelSerializer):
         
         request = self.context.get('request')
         if not request or not request.user.is_authenticated:
-            raise serializers.ValidationError('Category selection requires authentication.')
+            raise serializers.ValidationError(_('Category selection requires authentication.'))
         
         try:
             category = Category.objects.get(id=value, user=request.user)
         except Category.DoesNotExist:
-            raise serializers.ValidationError('Category does not exist or does not belong to you.')
+            raise serializers.ValidationError(_('Category does not exist or does not belong to you.'))
         
         return value
 

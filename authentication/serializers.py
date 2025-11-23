@@ -2,6 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from django.apps import apps
+from django.utils.translation import gettext_lazy as _
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -38,5 +39,5 @@ class TokenRefreshSerializer(serializers.Serializer):
         try:
             RefreshToken(value)
         except (InvalidToken, TokenError):
-            raise serializers.ValidationError('Invalid refresh token')
+            raise serializers.ValidationError(_('Invalid refresh token'))
         return value
