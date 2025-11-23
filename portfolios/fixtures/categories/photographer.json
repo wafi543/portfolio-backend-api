@@ -1,0 +1,58 @@
+[
+  {
+    "model": "portfolios.category",
+    "pk": null,
+    "fields": {
+      "user": null,
+      "name": "Photography",
+      "name_ar": "التصوير",
+      "icon": "camera",
+      "description": "Professional portrait, landscape, and commercial photography tailored to your vision.",
+      "description_ar": "تصوير احترافي للصور الشخصية والمناظر الطبيعية والتصوير التجاري مصمم حسب رؤيتك.",
+      "features": ["portrait", "drone", "video production"],
+      "order": 1
+    }
+  },
+  {
+    "model": "portfolios.category",
+    "pk": null,
+    "fields": {
+      "user": null,
+      "name": "Video Editing",
+      "name_ar": "المونتاج",
+      "icon": "video",
+      "description": "Professional video editing and post-production services to transform raw footage into compelling visual stories.",
+      "description_ar": "خدمات المونتاج والمعالجة اللاحقة الاحترافية لتحويل اللقطات الخام إلى قصص بصرية مقنعة.",
+      "features": [],
+      "order": 2
+    }
+  },
+  {
+    "model": "portfolios.category",
+    "pk": null,
+    "fields": {
+      "user": null,
+      "name": "Branding",
+      "name_ar": "الهوية البصرية",
+      "icon": "id-card",
+      "description": "Comprehensive branding solutions that establish and strengthen your brand identity in the market.",
+      "description_ar": "حلول شاملة للهوية البصرية لإنشاء وتعزيز هويتك التجارية في السوق.",
+      "features": [],
+      "order": 3
+    }
+  },
+  {
+    "model": "portfolios.category",
+    "pk": null,
+    "fields": {
+      "user": null,
+      "name": "Design",
+      "name_ar": "التصميم",
+      "icon": "dock",
+      "description": "Creative graphic design services for special occasions and personalized projects that make lasting impressions.",
+      "description_ar": "خدمات التصميم الجرافيكي الإبداعي للمناسبات الخاصة والمشاريع المخصصة التي تترك انطباعات دائمة.",
+      "features": ["invitations", "weddings", "newborns"],
+      "order": 4
+    }
+  }
+]

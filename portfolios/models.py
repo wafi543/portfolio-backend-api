@@ -10,12 +10,17 @@ class Category(models.Model):
     name = models.CharField(max_length=100, help_text="Category name in English")
     name_ar = models.CharField(max_length=100, help_text="Category name in Arabic")
     slug = models.CharField(max_length=100, editable=False)
+    icon = models.CharField(max_length=50, blank=True, null=True, help_text="Icon name from lucide-react (e.g., 'camera', 'video')")
+    description = models.TextField(blank=True, null=True, help_text="Category description in English")
+    description_ar = models.TextField(blank=True, null=True, help_text="Category description in Arabic")
+    features = models.JSONField(default=list, blank=True, help_text="List of features/services offered")
+    order = models.PositiveIntegerField(default=0, help_text="Display order for frontend")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = [['user', 'slug']]
-        ordering = ['name']
+        ordering = ['order', 'name']
 
     def save(self, *args, **kwargs):
         # Auto-generate slug from English name on creation only

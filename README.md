@@ -20,17 +20,27 @@ A lightweight Django REST Framework backend providing session-based authenticati
 | `GET` | `/api/auth/me/` | Get current user info |
 | `POST` | `/api/auth/password-change/` | Change password |
 
-### Posts
+### Portfolio Categories
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/posts/` | List user's posts |
-| `POST` | `/api/posts/` | Create new post |
-| `GET` | `/api/posts/<id>/` | Retrieve post details |
-| `PUT` | `/api/posts/<id>/` | Replace entire post |
-| `PATCH` | `/api/posts/<id>/` | Partial post update |
-| `DELETE` | `/api/posts/<id>/` | Delete post |
+| `GET` | `/api/portfolio/categories/` | List user's categories |
+| `POST` | `/api/portfolio/categories/` | Create new category |
+| `GET` | `/api/portfolio/categories/<id>/` | Retrieve category details |
+| `PUT` | `/api/portfolio/categories/<id>/` | Update category |
+| `DELETE` | `/api/portfolio/categories/<id>/` | Delete category |
 
-> **Note**: Each user only has access to their own posts.
+### Portfolio
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/portfolio/` | List portfolios (filter by `?category=<id>`, `?recent`) |
+| `POST` | `/api/portfolio/` | Create new portfolio (authenticated) |
+| `GET` | `/api/portfolio/<id>/` | Retrieve portfolio details |
+| `PUT` | `/api/portfolio/<id>/` | Update portfolio (authenticated) |
+| `PATCH` | `/api/portfolio/<id>/` | Partial portfolio update (authenticated) |
+| `DELETE` | `/api/portfolio/<id>/` | Delete portfolio (authenticated) |
+| `GET` | `/api/portfolio/info/` | Get public portfolio info |
+
+> **Note**: Portfolio filtering supports `?category=<id>` for category-based filtering and `?recent` to get the latest 6 portfolios.
 
 ## Quick Start
 
@@ -73,6 +83,22 @@ python manage.py runserver
 ```
 
 The API will be available at `http://localhost:8000/api/`
+
+### Loading Fixture Data (Optional)
+
+To quickly set up a photographer user with default portfolio categories:
+
+```bash
+# Create photographer user with default categories
+python manage.py add_photographer_fixtures
+
+# Or specify custom username and email
+python manage.py add_photographer_fixtures --username john_doe --email john@example.com
+```
+
+This command creates:
+- A user with "Photographer" job title
+- 4 default portfolio categories: Photography, Video Editing, Branding, and Design
 
 ## Frontend Integration
 
