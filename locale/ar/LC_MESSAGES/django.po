@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 21:18+0000\n"
+"POT-Creation-Date: 2025-11-23 21:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
 #: authentication/serializers.py:42 authentication/views.py:108
 msgid "Invalid refresh token"
 msgstr "رمز التحديث غير صالح"
@@ -34,34 +34,34 @@ msgstr "كلمة المرور القديمة غير صحيحة"
 msgid "Password changed successfully"
 msgstr "تم تغيير كلمة المرور بنجاح"
 
-#: portfolios/serializers.py:19
+#: portfolios/serializers.py:20
 msgid ""
 "Category name must contain only English alphabetical characters and spaces."
 msgstr "يجب أن يحتوي اسم الفئة على أحرف إنجليزية وفراغات فقط."
 
-#: portfolios/serializers.py:25
+#: portfolios/serializers.py:26
 msgid "Category Arabic name must contain only Arabic characters and spaces."
 msgstr "يجب أن يحتوي الاسم العربي للفئة على أحرف عربية وفراغات فقط."
 
-#: portfolios/serializers.py:63
-#, python-format
-msgid "Image size (%(size)s MB) exceeds 5MB limit"
-msgstr "حجم الصورة (%(size)s MB) يتجاوز حد 5MB"
+#: portfolios/serializers.py:64
+#, python-brace-format
+msgid "Image size ({} MB) exceeds 5MB limit"
+msgstr "حجم الصورة ({} MB) يتجاوز حد 5MB"
 
-#: portfolios/serializers.py:76
+#: portfolios/serializers.py:77
 msgid "Category selection requires authentication."
 msgstr "اختيار الفئة يتطلب المصادقة."
 
-#: portfolios/serializers.py:81
+#: portfolios/serializers.py:82
 msgid "Category does not exist or does not belong to you."
 msgstr "الفئة غير موجودة أو لا تنتمي إليك."
 
-#: portfolios/views.py:50
-#, python-format
-msgid "Cannot delete category with %(count)s existing portfolio(s)."
-msgstr "لا يمكن حذف الفئة التي تحتوي على %(count)s عمل موجود."
+#: portfolios/views.py:51
+msgid ""
+"Cannot delete category with associated portfolios. Please reassign or delete "
+"the portfolios first."
+msgstr "لا يمكن حذف التصنيف الذي يحتوي على أعمال مرتبطة. يرجى إعادة تعيين أو حذف الأعمال أولاً."
 
-#: portfolios/views.py:106
+#: portfolios/views.py:107
 msgid "Portfolio info not found"
 msgstr "لم يتم العثور على معلومات العمل"
-

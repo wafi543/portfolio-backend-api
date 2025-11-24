@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models import QuerySet
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import format_lazy
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -47,7 +48,7 @@ class CategoryRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             return super().destroy(request, *args, **kwargs)
         except models.ProtectedError:
             return Response(
-                {'detail': _('Cannot delete category with %(count)s existing portfolio(s).') % {'count': instance.portfolios.count()}},
+                {'detail': format_lazy(_('Cannot delete category with associated portfolios. Please reassign or delete the portfolios first.'))},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

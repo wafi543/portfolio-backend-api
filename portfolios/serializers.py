@@ -1,6 +1,7 @@
 from rest_framework import serializers
 import re
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import format_lazy
 
 from .models import Portfolio, PortfolioInfo, Category
 from authentication.serializers import UserSerializer
@@ -60,7 +61,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
         # Check file size (5MB limit)
         size_mb = value.size / (1024 * 1024)
         if size_mb > 5:
-            raise serializers.ValidationError(_('Image size (%(size)s MB) exceeds 5MB limit') % {'size': f'{size_mb:.2f}'})
+            raise serializers.ValidationError(format_lazy(_('Image size ({} MB) exceeds 5MB limit'), f'{size_mb:.2f}'))
         
         return value
 
