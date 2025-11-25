@@ -19,7 +19,8 @@ ALLOWED_HOSTS: list = [
     'localhost',
     '127.0.0.1',
     'pixel-portfolios.vercel.app',
-    'portfolio.alnmasi.men'
+    'portfolio.alnmasi.men',
+    '34.79.57.209'
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
