@@ -22,6 +22,7 @@ from authentication.permissions import IsSuperUser
 
 class CategoryListCreateView(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
+    pagination_class = PageNumberPagination
 
     def get_permissions(self):
         if self.request.method == 'POST':
@@ -32,6 +33,12 @@ class CategoryListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self) -> QuerySet[Category]:
         return Category.objects.all()
+
+    def paginate_queryset(self, queryset):
+        """Disable pagination if no_pagination query parameter is present"""
+        if self.request.query_params.get('no_pagination'):
+            return None
+        return super().paginate_queryset(queryset)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
