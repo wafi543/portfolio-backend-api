@@ -18,13 +18,20 @@ from .serializers import (
     CategorySerializer,
 )
 from .permissions import IsOwner, IsCategoryOwner
+from authentication.permissions import IsSuperUser
 
 class CategoryListCreateView(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            permission_classes = [IsAuthenticated, IsSuperUser]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self) -> QuerySet[Category]:
-        return Category.objects.filter(user=self.request.user)
+        return Category.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -32,11 +39,17 @@ class CategoryListCreateView(generics.ListCreateAPIView):
 
 class CategoryRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated, IsCategoryOwner]
     queryset = Category.objects.all()
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated, IsSuperUser]
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self) -> QuerySet[Category]:
-        return Category.objects.filter(user=self.request.user)
+        return Category.objects.all()
 
     def destroy(self, request, *args, **kwargs):
         """
@@ -59,16 +72,13 @@ class PortfolioListCreateView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == 'POST':
-            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAuthenticated, IsSuperUser]
         else:
             permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
 
     def get_queryset(self) -> QuerySet[Portfolio]:
-        if self.request.user.is_authenticated:
-            queryset = Portfolio.objects.filter(author=self.request.user)
-        else:
-            queryset = Portfolio.objects.all()
+        queryset = Portfolio.objects.all()
         
         # Filter by category if ?category query parameter is present
         category_id = self.request.query_params.get('category_id')
@@ -87,12 +97,18 @@ class PortfolioListCreateView(generics.ListCreateAPIView):
 
 class PortfolioRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PortfolioSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
     queryset = Portfolio.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated, IsSuperUser]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self) -> QuerySet[Portfolio]:
         # Also filter queryset to user portfolios for list safety
-        return Portfolio.objects.filter(author=self.request.user)
+        return Portfolio.objects.all()
 
 
 class PortfolioInfoView(APIView):
