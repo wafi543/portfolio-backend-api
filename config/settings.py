@@ -179,7 +179,7 @@ if CURRENT_ENV == 'prod' or os.environ.get('USE_GCS', os.getenv('USE_GCS', 'Fals
     MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
     
     # Prevent django-storages from compressing media files
-    GS_KEEP_DEFAULT_ACL = True
+    GS_DEFAULT_ACL = None
     GS_QUERYSET_AUTH = False  # Allow public read access to media files
 else:
     # Local storage for development
