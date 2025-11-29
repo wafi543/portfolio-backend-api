@@ -33,9 +33,14 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Prevent slug changes (keep slug immutable)."""
-        # Allow updating name and name_ar; slug remains immutable
+        # Allow updating name, name_ar, and features; slug remains immutable
         instance.name = validated_data.get('name', instance.name)
         instance.name_ar = validated_data.get('name_ar', instance.name_ar)
+        instance.icon = validated_data.get('icon', instance.icon)
+        instance.description = validated_data.get('description', instance.description)
+        instance.description_ar = validated_data.get('description_ar', instance.description_ar)
+        instance.features = validated_data.get('features', instance.features)
+        instance.order = validated_data.get('order', instance.order)
         instance.save()
         return instance
 
