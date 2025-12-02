@@ -7,11 +7,15 @@ export SSH_PRIVATE_KEY=$(cat ./ssh_keys/id_ed25519)
 
 export INITIAL_SESSION_COMMANDS="sudo journalctl -u google-startup-scripts.service -b -f"
 
-echo "🚀 Initial Setup on New Google Cloud compute instance"
+echo "🚀 Initial Setup on New Google Cloud compute instance, in project: $GCS_PROJECT_ID"
+
+# Set the GCP project
+gcloud config set project $GCS_PROJECT_ID
 
 # Create the instance and capture output
 echo "🔄 Creating instance..."
 CREATE_OUTPUT=$(gcloud compute instances create $GCP_INSTANCE_NAME \
+  --project=$GCS_PROJECT_ID \
   --zone=$GCP_ZONE \
   --machine-type=e2-micro \
   --image-family=ubuntu-2204-lts \
@@ -38,6 +42,8 @@ if [ $? -eq 0 ]; then
 ')
 
   echo "✅ Instance created successfully. Instance IP: $EXTERNAL_IP"
+
+  echo "Next step: Go to your domain DNS and set A record record for $NGINX_HOST with IP: $EXTERNAL_IP"
 
   # Wait for SSH to be ready (max 30 seconds)
   echo "⏳ Waiting for SSH Connection to become available (max 30 seconds)..."
