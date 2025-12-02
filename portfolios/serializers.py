@@ -46,15 +46,14 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PortfolioSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True, default=serializers.CurrentUserDefault())
     image = serializers.ImageField(required=False, allow_null=True)
     category = CategorySerializer(read_only=True)
     category_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Portfolio
-        fields = ['id', 'title', 'subtitle', 'image', 'category', 'category_id', 'body', 'author', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'author', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'subtitle', 'image', 'category', 'category_id', 'body', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
 
     def validate_image(self, value):
         """
