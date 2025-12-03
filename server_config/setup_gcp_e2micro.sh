@@ -48,8 +48,22 @@ if [ $? -eq 0 ]; then
   # Wait for SSH to be ready (max 30 seconds)
   echo "⏳ Waiting for SSH Connection to become available (max 30 seconds)..."
   timeout 30 bash -c "until gcloud compute ssh $GCP_INSTANCE_NAME --zone=$GCP_ZONE --command='echo SSH ready' &>/dev/null; do sleep 5; done"
+  echo "✅ SSH Connection is ready!"
+
+  echo "🏛️ Setting up firewall rules to allow HTTP and HTTPS traffic..."
+  gcloud compute firewall-rules create allow-http \
+    --allow tcp:80 \
+    --target-tags http-server \
+    --description="Allow HTTP"
+  gcloud compute firewall-rules create allow-https \
+    --allow tcp:443 \
+    --target-tags https-server \
+    --description="Allow HTTPS"
+  echo "🏛️ Tagging instance with http-server, https-server tags..."
+  gcloud compute instances add-tags $GCP_INSTANCE_NAME --tags=http-server,https-server --zone=$GCP_ZONE
 
   # Show live logs inside VM instance
+  echo "✅ Connecting to instance to show live startup logs..."
   gcloud compute ssh $UBUNTU_USER@$GCP_INSTANCE_NAME --zone=$GCP_ZONE --command "$INITIAL_SESSION_COMMANDS"
 else
   echo "❌ Instance creation failed!"

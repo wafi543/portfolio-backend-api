@@ -107,7 +107,7 @@ echo "3.1 Enabling Docker on boot..."
 systemctl enable docker
 systemctl start docker
 
-echo "4. 🔐 Installing HTTPS Certificate for you domain ${NGINX_HOST}"
+echo "4. 🔐 Installing HTTPS Certificate for your domain ${NGINX_HOST}"
 sudo apt install certbot python3-certbot-nginx -y
 certbot certonly --nginx -d $NGINX_HOST -d www.$NGINX_HOST \
 --email "$EMAIL" --agree-tos
