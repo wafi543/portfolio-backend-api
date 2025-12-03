@@ -3,7 +3,7 @@ import re
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import format_lazy
 
-from .models import Portfolio, PortfolioInfo, Category
+from .models import Portfolio, PortfolioInfo, Category, PortfolioImage
 from authentication.serializers import UserSerializer
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -46,70 +46,62 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PortfolioSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(required=False, allow_null=True)
     category = CategorySerializer(read_only=True)
     category_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Portfolio
-        fields = ['id', 'title', 'subtitle', 'image', 'category', 'category_id', 'body', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'subtitle', 'category', 'category_id', 'body', 'created_at', 'updated_at', 'images', 'is_completed']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'images']
 
-    def validate_image(self, value):
-        """
-        Validate image file size (max 5MB to minimize GCS costs).
-        """
-        if not value:
-            return value
-        
-        # Check file size (5MB limit)
-        size_mb = value.size / (1024 * 1024)
-        if size_mb > 5:
-            raise serializers.ValidationError(format_lazy(_('Image size ({} MB) exceeds 5MB limit'), f'{size_mb:.2f}'))
-        
-        return value
+    images = serializers.SerializerMethodField()
+
+    def get_images(self, obj):
+        qs = obj.images.all().order_by('-created_at')
+        return PortfolioImageSerializer(qs, many=True, context=self.context).data
 
     def validate_category_id(self, value):
-        """
-        Ensure category belongs to the authenticated user.
-        """
+        """Ensure category belongs to the authenticated user."""
         if value is None:
             return value
-        
         request = self.context.get('request')
         if not request or not request.user.is_authenticated:
             raise serializers.ValidationError(_('Category selection requires authentication.'))
-        
         try:
-            category = Category.objects.get(id=value, user=request.user)
+            Category.objects.get(id=value, user=request.user)
         except Category.DoesNotExist:
             raise serializers.ValidationError(_('Category does not exist or does not belong to you.'))
-        
         return value
 
     def create(self, validated_data):
-        """Set author to current user and handle category FK."""
         category_id = validated_data.pop('category_id', None)
         portfolio = Portfolio.objects.create(**validated_data)
-        
         if category_id:
             portfolio.category_id = category_id
             portfolio.save()
-        
         return portfolio
 
     def update(self, instance, validated_data):
-        """Handle category FK update."""
         category_id = validated_data.pop('category_id', None)
-        
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        
         if category_id is not None:
             instance.category_id = category_id
-        
         instance.save()
         return instance
+
+
+class PortfolioImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PortfolioImage
+        fields = ['id', 'image', 'caption', 'gcs_object_name', 'created_at']
+        read_only_fields = ['gcs_object_name', 'created_at', 'id']
+
+    def validate_image(self, value):
+        max_size = 5 * 1024 * 1024
+        if value and hasattr(value, 'size') and value.size > max_size:
+            raise serializers.ValidationError('Image size must be less than 5MB.')
+        return value
 
 
 class PortfolioInfoSerializer(serializers.ModelSerializer):

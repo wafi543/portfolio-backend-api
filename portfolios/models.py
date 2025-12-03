@@ -36,12 +36,7 @@ class Portfolio(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='portfolios')
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=300, blank=True, null=True)
-    image = models.ImageField(
-        upload_to='portfolios/%Y/%m/%d/',
-        blank=True,
-        null=True,
-        storage=GoogleCloudStorage()
-    )
+    is_completed = models.BooleanField(default=False)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='portfolios')
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -52,6 +47,26 @@ class Portfolio(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+
+class PortfolioImage(models.Model):
+    """Multiple images per portfolio with GCS object tracking."""
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(
+        upload_to='portfolios/%Y/%m/%d/',
+        storage=GoogleCloudStorage(),
+        blank=False,
+        null=False,
+    )
+    caption = models.CharField(max_length=300, blank=True, null=True)
+    gcs_object_name = models.CharField(max_length=512, blank=True, null=True, help_text="Full object path/key in GCS for housekeeping")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self) -> str:
+        return f"{self.portfolio.title} image ({self.pk})"
 
 
 class PortfolioInfo(models.Model):

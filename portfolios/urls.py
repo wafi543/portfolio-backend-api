@@ -6,6 +6,8 @@ from .views import (
     PortfolioListCreateView,
     PortfolioRetrieveUpdateDestroyView,
     PortfolioInfoView,
+    PortfolioImageListCreateView,
+    PortfolioImageRetrieveDestroyView,
 )
 
 urlpatterns = [
@@ -17,4 +19,7 @@ urlpatterns = [
     path('<int:pk>/', PortfolioRetrieveUpdateDestroyView.as_view(), name='api_portfolio_detail'),
     # Portfolio Info (public metadata)
     path('info/', PortfolioInfoView.as_view(), name='portfolio_info'),
+    # Portfolio Images
+    path('<int:portfolio_id>/images/', PortfolioImageListCreateView.as_view(), name='api_portfolio_image_list_create'),
+    path('<int:portfolio_id>/images/<int:image_id>/', PortfolioImageRetrieveDestroyView.as_view(), name='api_portfolio_image_detail'),
 ]
