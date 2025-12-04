@@ -68,8 +68,8 @@ if [ -f /home/$USER/.ssh/id_ed25519.pub ]; then
     sudo -u $USER touch "$ENV_FILE" || { echo "❌ Failed to create $ENV_FILE"; exit 1; }
     sudo -u $USER cat > "$ENV_FILE" <<EOF
 # Postgres Env Vars
-export POSTGRES_HOST="db" # docker-compose service name
-export POSTGRES_PORT="5432"
+export POSTGRES_HOST="$POSTGRES_HOST" # docker-compose service name
+export POSTGRES_PORT="$POSTGRES_PORT"
 export POSTGRES_DB="$POSTGRES_DB"
 export POSTGRES_USER="$POSTGRES_USER"
 export POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
@@ -86,6 +86,13 @@ export EMAIL="$EMAIL"
 export GITHUB_REPO="$GITHUB_REPO"
 export GCP_INSTANCE_NAME="$INSTANCE_NAME"
 export SSL_CERT_PATH="$SSL_CERT_PATH"
+
+# Google Cloud Storage - Production Configuration
+export USE_GCS="$USE_GCS"
+export GCS_BUCKET_NAME="$GCS_BUCKET_NAME"
+export GCS_PROJECT_ID="$GCS_PROJECT_ID"
+export GCS_REGION="$GCS_REGION" 
+export GCS_SERVICE_ACCOUNT_JSON="$GCS_SERVICE_ACCOUNT_JSON"
 EOF
     sudo -u $USER chmod 600 "$ENV_FILE"
     echo "✅ .env.prod generated successfully in $ENV_FILE"
