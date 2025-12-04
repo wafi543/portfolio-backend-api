@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+from django.core.validators import MinValueValidator, MaxValueValidator
 from storages.backends.gcloud import GoogleCloudStorage
 
 
@@ -59,6 +60,18 @@ class PortfolioImage(models.Model):
         null=False,
     )
     caption = models.CharField(max_length=300, blank=True, null=True)
+    width = models.IntegerField(
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(100), MaxValueValidator(4000)],
+        help_text="Image width in pixels (100-4000)"
+    )
+    height = models.IntegerField(
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(100), MaxValueValidator(4000)],
+        help_text="Image height in pixels (100-4000)"
+    )
     gcs_object_name = models.CharField(max_length=512, blank=True, null=True, help_text="Full object path/key in GCS for housekeeping")
     created_at = models.DateTimeField(auto_now_add=True)
 

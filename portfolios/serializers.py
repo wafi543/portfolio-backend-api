@@ -94,7 +94,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
 class PortfolioImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PortfolioImage
-        fields = ['id', 'image', 'caption', 'gcs_object_name', 'created_at']
+        fields = ['id', 'image', 'caption', 'width', 'height', 'gcs_object_name', 'created_at']
         read_only_fields = ['gcs_object_name', 'created_at', 'id']
 
     def validate_image(self, value):
